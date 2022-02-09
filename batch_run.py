@@ -55,11 +55,13 @@ def run(from_dir, to_dir, command_template, run):
     ```
     """
     for file_in, file_out in file_pairs(from_dir, to_dir):
-        command = command_template.format(file_in, file_out)
+        command = command_template.format(escape(file_in), escape(file_out))
         print(command)
         if run:
             subprocess.call(command, shell=True)
 
+def escape(path):
+    return '"' + str(path) + '"'
 
 def file_pairs(from_dir, to_dir):
     for file_in in from_dir.iterdir():
