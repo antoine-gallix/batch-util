@@ -1,13 +1,21 @@
 #!/usr/bin/env fish
 
 # with a command
-python batch_run.py $INPUTDIR $OUTPUTDIR "command --option {0} {1}"
+set command python batch_run.py $INPUTDIR $OUTPUTDIR "command --option {0} {1}"
+echo $command
+eval $command
 
 # without a command. not yet working
-# python batch_run.py $INPUTDIR $OUTPUTDIR
+set command python batch_run.py $INPUTDIR $OUTPUTDIR
+echo $command
+eval $command
 
-# only one dir, no command. not yet working
-# python batch_run.py $INPUTDIR
+# only one dir, no command.
+set command python batch_run.py $INPUTDIR
+echo $command
+eval $command
 
 # only one dir, with command. not yet working
-# python batch_run.py $INPUTDIR "command --option {0} {1}"
+set command "python batch_run.py $INPUTDIR --command 'command --option {}'"
+echo $command
+eval $command
