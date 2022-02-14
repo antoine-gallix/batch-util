@@ -36,7 +36,6 @@ def test_substitute_dir():
 # -----------------------------------------------
 
 
-
 def test_input_dir_only_no_command(test_files):
     runner = CliRunner()
     result = runner.invoke(run, ["source"])
@@ -83,14 +82,17 @@ def test_with_output_dir(test_files):
             "--dest",
             "destination",
             "--command",
-            'process-files --option value --to {} {}',
+            "process-files --option value --to {} {}",
         ],
     )
     assert result.exit_code == 0
     assert set(result.output.strip().split("\n")) == set(
         [
-            'process-files --option value --to "source/file_2.ext" "destination/file_2.ext"',
-            'process-files --option value --to "source/file_1.ext" "destination/file_1.ext"',
-            'process-files --option value --to "source/file_3.ext" "destination/file_3.ext"',
+            'process-files --option value --to "source/file_2.ext"'
+            ' "destination/file_2.ext"',
+            'process-files --option value --to "source/file_1.ext"'
+            ' "destination/file_1.ext"',
+            'process-files --option value --to "source/file_3.ext"'
+            ' "destination/file_3.ext"',
         ]
     )
