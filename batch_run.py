@@ -1,8 +1,8 @@
 import pathlib
-import subprocess
 import functools
 import click
 import itertools
+
 
 @click.command()
 @click.argument(
@@ -19,9 +19,13 @@ import itertools
     help="Directory that will receive the processed files",
 )
 @click.option(
-    "--command","command_template",
+    "--command",
+    "command_template",
     type=click.STRING,
-    help="Command to run on the input batch. Use two {} placeholders for the input and output files",
+    help=(
+        "Command to run on the input batch. "
+        "Use two {} placeholders for the input and output files"
+    ),
 )
 @click.option(
     "--run",
@@ -65,12 +69,12 @@ def run(origin, dest, command_template, run):
             command = command_template.format(escape(file_in))
             print(command)
     elif dest and not command_template:
-        files_in,files_in_prime = itertools.tee(origin.iterdir())
+        files_in, files_in_prime = itertools.tee(origin.iterdir())
         files_out = map(functools.partial(substitute_dir, dest), files_in_prime)
         for file_in, file_out in zip(files_in, files_out):
             print(file_in, file_out)
     elif dest and command_template:
-        files_in,files_in_prime = itertools.tee(origin.iterdir())
+        files_in, files_in_prime = itertools.tee(origin.iterdir())
         files_out = map(functools.partial(substitute_dir, dest), files_in_prime)
         for file_in, file_out in zip(files_in, files_out):
             command = command_template.format(escape(file_in), escape(file_out))
