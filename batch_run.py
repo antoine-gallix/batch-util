@@ -61,26 +61,22 @@ def run(origin, dest, command_template, run):
     processing audio file...
     ```
     """
-    if not dest and not command_template:
+    if not dest:
         for file_in in origin.iterdir():
-            print(file_in)
-    elif not dest and command_template:
-        for file_in in origin.iterdir():
-            command = command_template.format(escape(file_in))
-            print(command)
-    elif dest and not command_template:
-        files_in, files_in_prime = itertools.tee(origin.iterdir())
-        files_out = map(functools.partial(substitute_dir, dest), files_in_prime)
-        for file_in, file_out in zip(files_in, files_out):
-            print(file_in, file_out)
-    elif dest and command_template:
-        files_in, files_in_prime = itertools.tee(origin.iterdir())
-        files_out = map(functools.partial(substitute_dir, dest), files_in_prime)
-        for file_in, file_out in zip(files_in, files_out):
-            command = command_template.format(escape(file_in), escape(file_out))
-            print(command)
+            if command_template:
+                command = command_template.format(escape(file_in))
+                print(command)
+            else:
+                print(file_in)
     else:
-        raise
+        files_in, files_in_prime = itertools.tee(origin.iterdir())
+        files_out = map(functools.partial(substitute_dir, dest), files_in_prime)
+        for file_in, file_out in zip(files_in, files_out):
+            if command_template:
+                command = command_template.format(escape(file_in), escape(file_out))
+                print(command)
+            else:
+                print(file_in, file_out)
 
 
 def escape(path):
