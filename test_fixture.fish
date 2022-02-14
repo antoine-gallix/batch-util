@@ -16,5 +16,5 @@ echo INPUTDIR=$inputdir
 echo OUTPUTDIR=$outputdir
 echo
 echo "# fish"
-echo set INPUTDIR $inputdir
-echo set OUTPUTDIR $outputdir
+echo set -x INPUTDIR $inputdir
+echo set -x OUTPUTDIR $outputdir
