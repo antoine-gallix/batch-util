@@ -6,8 +6,9 @@ mkdir $inputdir
 set outputdir $testdir/output
 mkdir $outputdir
 for x in (seq 5)
-    mktemp -q -p $inputdir XXXXXX.ogg > /dev/null
+    touch $inputdir/file-$x.ogg
 end
+tree $testdir
 
 echo "# use the following directories for testing"
 echo "# bash"
