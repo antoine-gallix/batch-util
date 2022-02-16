@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "batch_run"
+name = "batch"
 version = "0.1.0"
 description = ""
 authors = ["Antoine Gallix <antoine@antoine-gallix.me>"]
