@@ -4,6 +4,29 @@ import click
 import itertools
 
 
+def validate_ext(ctx, param, value):
+    if value is None:
+        return
+    if value[0] != '.':
+        value = '.' + value
+    return value
+
+def escape(path):
+    return '"' + str(path) + '"'
+
+
+def substitute_dir(dir_path, file_path):
+    return dir_path / file_path.name
+
+def substitute_ext(ext, file_path):
+    return file_path.with_suffix(ext)
+
+
+def file_pairs(origin, destination):
+    for file_in in origin.iterdir():
+        yield file_in, substitute_dir(file_in, destination)
+
+
 @click.command()
 @click.argument(
     "origin",
@@ -19,6 +42,12 @@ import itertools
     help="Directory that will receive the processed files",
 )
 @click.option(
+    "--ext",
+    type=click.STRING,
+    help="Replace the output file's extension",
+    callback=validate_ext
+)
+@click.option(
     "--command",
     "command_template",
     type=click.STRING,
@@ -27,7 +56,7 @@ import itertools
         "Use two {} placeholders for the input and output files"
     ),
 )
-def batch(origin, dest, command_template):
+def batch(origin, dest, ext, command_template):
     """Apply command_template in batch
 
     ORIGIN: Directory that contain the input files
@@ -53,6 +82,9 @@ def batch(origin, dest, command_template):
     # preview the input and output files used in a command template
     > batch path/to/recordings --dest path/to/processed --command 'process-data --quality 16 --output {1} {0}'
 
+    # change the filename extension of the output file
+    > batch path/to/recordings --dest path/to/processed --ext .flac --command 'convert --output {1} {0}'
+
     # run the commands
     > batch path/to/recordings --dest path/to/processed --command 'process-data --quality 16 --output {1} {0}' | source
 
@@ -67,6 +99,8 @@ def batch(origin, dest, command_template):
     else:
         files_in, files_in_prime = itertools.tee(origin.iterdir())
         files_out = map(functools.partial(substitute_dir, dest), files_in_prime)
+        if ext:
+            files_out = map(functools.partial(substitute_ext, ext), files_out)
         for file_in, file_out in zip(files_in, files_out):
             if command_template:
                 command = command_template.format(escape(file_in), escape(file_out))
@@ -75,18 +109,8 @@ def batch(origin, dest, command_template):
                 print(file_in, file_out)
 
 
-def escape(path):
-    return '"' + str(path) + '"'
 
-
-def substitute_dir(dir_path, file_path):
-    return dir_path / file_path.name
-
-
-def file_pairs(origin, destination):
-    for file_in in origin.iterdir():
-        yield file_in, substitute_dir(file_in, destination)
 
 
 if __name__ == "__main__":
-    run()
+    batch()
