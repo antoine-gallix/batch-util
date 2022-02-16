@@ -23,43 +23,39 @@ import itertools
     "command_template",
     type=click.STRING,
     help=(
-        "Command to run on the input batch. "
+        "Command to apply on every file. "
         "Use two {} placeholders for the input and output files"
     ),
 )
-@click.option(
-    "--run",
-    help="Run the commands. By default, the command do not run anything",
-    is_flag=True,
-)
-def run(origin, dest, command_template, run):
+def batch(origin, dest, command_template):
     """Apply command_template in batch
 
     ORIGIN: Directory that contain the input files
 
-    Use case:
+    --- Use cases ---
 
     Apply a command that process files from a directory, and put the resulting files in another directory.
 
-    Example:command_template
-    ```
-    # test the command
-    > batch recordings processed 'clean-audio --denoise 16 --normalize {} {}'
+    # preview the input file list
+    > batch path/to/recordings
 
-    clean-audio --denoise 16 --normalize recordings/intro.ogg processed/intro.ogg
-    clean-audio --denoise 16 --normalize recordings/interview.ogg processed/interview.ogg
-    clean-audio --denoise 16 --normalize recordings/credits.ogg processed/credits.ogg
+    # preview the input file list used in a command template
+    > batch path/to/recordings --command 'process-data --quality 16 {}'
 
-    # run commands
-    > batch recordings processed 'clean-audio --denoise 16 --normalize {} {}' --run
+    # run the commands
+    > batch path/to/recordings --command 'process-data --quality 16 {}' | source
 
-    clean-audio --denoise 16 --normalize recordings/intro.ogg processed/intro.ogg
-    processing audio file...
-    clean-audio --denoise 16 --normalize recordings/interview.ogg processed/interview.ogg
-    processing audio file...
-    clean-audio --denoise 16 --normalize recordings/credits.ogg processed/credits.ogg
-    processing audio file...
-    ```
+    Example with input and output files:
+
+    # preview the input and output file list
+    > batch path/to/recordings --dest path/to/processed
+
+    # preview the input and output files used in a command template
+    > batch path/to/recordings --dest path/to/processed --command 'process-data --quality 16 --output {1} {0}'
+
+    # run the commands
+    > batch path/to/recordings --dest path/to/processed --command 'process-data --quality 16 --output {1} {0}' | source
+
     """
     if not dest:
         for file_in in origin.iterdir():

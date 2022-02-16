@@ -3,7 +3,7 @@ from pathlib import Path
 from click.testing import CliRunner
 from pytest import fixture
 
-from batch_run import escape, run, substitute_dir
+from batch import escape, batch, substitute_dir
 
 
 @fixture
@@ -38,7 +38,7 @@ def test_substitute_dir():
 
 def test_input_dir_only_no_command(test_files):
     runner = CliRunner()
-    result = runner.invoke(run, ["source"])
+    result = runner.invoke(batch, ["source"])
     assert result.exit_code == 0
     assert set(result.output.strip().split("\n")) == set(
         ["source/file_2.ext", "source/file_1.ext", "source/file_3.ext"]
@@ -48,7 +48,7 @@ def test_input_dir_only_no_command(test_files):
 def test_input_dir_only(test_files):
     runner = CliRunner()
     result = runner.invoke(
-        run, ["source", "--command", "process-files --option value {}"]
+        batch, ["source", "--command", "process-files --option value {}"]
     )
     assert result.exit_code == 0
     assert set(result.output.strip().split("\n")) == set(
@@ -62,7 +62,7 @@ def test_input_dir_only(test_files):
 
 def test_with_output_dir_no_command(test_files):
     runner = CliRunner()
-    result = runner.invoke(run, ["source", "--dest", "destination"])
+    result = runner.invoke(batch, ["source", "--dest", "destination"])
     assert result.exit_code == 0
     assert set(result.output.strip().split("\n")) == set(
         [
@@ -76,7 +76,7 @@ def test_with_output_dir_no_command(test_files):
 def test_with_output_dir(test_files):
     runner = CliRunner()
     result = runner.invoke(
-        run,
+        batch,
         [
             "source",
             "--dest",

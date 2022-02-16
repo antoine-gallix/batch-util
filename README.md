@@ -1,9 +1,6 @@
 # batch-run
 
-Command line util that assist into processing files in batch from the command line. It cover the following use cases:
-
-- Apply a command to all files in a directory.
-- Apply a command to all files in a directory and put the result files in another directory, using the original names.
+Command line utility that assist into processing files in batch from the command line. It takes a command template and a directory, and generates a command for each file in the directory. To generate commands with a second file given as output, options can be used to generate a second series of filenames derived from the original filenames, by changing the extension, or the directory. 
 
 ## Installation
 
@@ -32,9 +29,8 @@ process-data --inplace --option value "path/to/workdir/input/file-1.ogg"
 process-data --inplace --option value "path/to/workdir/input/file-2.ogg"
 process-data --inplace --option value "path/to/workdir/input/file-3.ogg"
 
-# Once sure of the obtained commands, execute them using the "--run" flag.
-❯ batch input --command "process-data --inplace --option value {}" --run
-# commands will run one by one
+# Once sure of the obtained commands, execute the commands with a pipe to the `source` command.
+❯ batch input --command "process-data --inplace --option value {}" | source
 ```
 
 ## Apply a command to all files in a directory, output to another directory
