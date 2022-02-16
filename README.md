@@ -1,10 +1,10 @@
-# batch-run
+# batch-util
 
 Command line utility that assist into processing files in batch from the command line. It takes a command template and a directory, and generates a command for each file in the directory. To generate commands with a second file given as output, options can be used to generate a second series of filenames derived from the original filenames, by changing the extension, or the directory. 
 
 ## Installation
 
-`pip install git+https://github.com/antoine-gallix/batch-run.git`
+`pip install git+https://github.com/antoine-gallix/batch-util.git`
 
 This will install a command called `batch`
 
